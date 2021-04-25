@@ -17,6 +17,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8">
+                    <h2 id="Error" style="display:none;" class="text-danger">Not Found</h2>
                     <div class="form-group">
                         Identification
                         <input type="text" name="txtEmpID" placeholder="Employee ID" readonly class="form-control form-control-lg" />
@@ -35,7 +36,7 @@
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <img src="#" width="600" alt="Alternate Text" />
+                    <img id="Image" src="~/Content/img/Default.png" width="300" alt="Alternate Text" />
                 </div>
             </div>
         </div>
@@ -49,18 +50,39 @@
     var Name = $('input[name=txtname]');
     var Department = $('input[name=txtDepartment]');
     var Position = $('input[name=txtPosition]');
+    var Picture = $('#Image');
 
     function Initiate() {
         $.get('@Url.Action("FindEmployee")', { EmpID: EmpID.val() }).done(function (data) {
-            ID.val(data.EmpID);
-            Name.val(`${data.Fname} ${data.Mname} ${data.Lname}`);
-            Department.val(data.Department);
-            Position.val(data.Position);
+            if (data.EmpID != null) {
+                ID.val(data.EmpID);
+                Name.val(`${data.Fname} ${data.Mname} ${data.Lname}`);
+                Department.val(data.Department);
+                Position.val(data.Position);
+                Picture.attr('src', `${data.Picture}`);
+            } else {
+                $('#Error').css('display','block');
+                Name.val(``);
+                Department.val('');
+                Position.val('');
+                EmpID.val('');
+                Picture.attr('src', `/Content/img/Default.png`);
+            }
         });
     }
 
-    EmpID.on('input',function () {
+    EmpID.on('input', function () {
         Initiate();
+        setTimeout(function () {
+            ID.val('');
+            Name.val(``);
+            Department.val('');
+            Position.val('');
+            EmpID.val('');
+            Picture.attr('src', `/Content/img/Default.png`);
+            $('#Error').css('display','none');
+        }, 10000);
+       
     });
 </script>    
 }

@@ -18,8 +18,25 @@ namespace AttendanceMonitoring.Controllers
         [HttpGet]
         public JsonResult FindEmployee(Attendance _att)
         {
-            att.AddAttendance(new Attendance(Convert.ToDateTime(DateTime.Now).ToShortDateString(), _att.EmpID, Convert.ToDateTime(DateTime.Now).ToShortTimeString()));
+            att.AddAttendance(new Attendance(DateTime.Now.ToString(), _att.EmpID, Convert.ToDateTime(DateTime.Now).ToShortTimeString()));
             return Json(emp.FindEmployee(_att.EmpID), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult Registration()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Registration(Employee emp)
+        {
+            if (ModelState.IsValid)
+            {
+                emp.Insert(emp);
+                return RedirectToAction("Index");
+            }
+            return View();
         }
     }
 }
